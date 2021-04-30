@@ -6,6 +6,7 @@ const settingsController = new SettingsController();
 
 
 routes.post("/settings", settingsController.create);
+routes.get("/settings/:username", settingsController.getByUsername);
 
 
 export default routes;
