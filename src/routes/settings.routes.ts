@@ -1,11 +1,11 @@
 import { Router } from "express";
+import SettingsController from "../controllers/SettingsController";
 
 const routes = Router();
+const settingsController = new SettingsController();
 
-routes.get("/settings", (req, res) => {
-    return res.status(200).json({
-        message: "Lista de settings"
-    })
-});
+
+routes.post("/settings", settingsController.create);
+
 
 export default routes;
