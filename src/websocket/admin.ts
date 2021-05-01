@@ -1,5 +1,6 @@
 import { io } from "../http";
 import {
+    UpdateAdminByUserIdService,
     GetConnectionByUserIdService,
     FindAllMessagesWithoutAdminService
 } from "../services/connectionsServices";
@@ -21,6 +22,7 @@ io.on("connect", async (socket) => {
 
     const createMessagesService = new CreateMessagesService();
     const listUserMessagesService = new ListUserMessagesService();
+    const updateAdminByUserIdService = new UpdateAdminByUserIdService();
     const getConnectionByUserIdService = new GetConnectionByUserIdService();
     const findAllMessagesWithoutAdminService = new FindAllMessagesWithoutAdminService();
 
@@ -48,6 +50,14 @@ io.on("connect", async (socket) => {
             text,
             socket_id: socket.id
         });
+    });
+
+    socket.on("admin_user_in_support", async ({ user_id }: IListParams) => {
+        await updateAdminByUserIdService.execute({ user_id, admin_id: socket.id });
+        
+        const allMessagesWithoutAdmin = await findAllMessagesWithoutAdminService.execute();
+    
+        io.emit("admin_list_all_users", allMessagesWithoutAdmin);
     });
 
 });
