@@ -8,7 +8,8 @@ import {
     GetConnectionByUserIdService 
 } from "../services/connectionsServices";
 import {
-    CreateMessagesService
+    CreateMessagesService,
+    ListUserMessagesService
 } from "../services/messagesServices";
 
 
@@ -22,6 +23,7 @@ io.on("connect", (socket) => {
     const createUserService = new CreateUserService();
     const createMessagesService = new CreateMessagesService();
     const findUserByEmailService = new FindUserByEmailService();
+    const listUserMessagesService = new ListUserMessagesService();
     const createConnectionService = new CreateConnectionsService();
     const getConnectionByUserIdService = new GetConnectionByUserIdService();
 
@@ -62,6 +64,10 @@ io.on("connect", (socket) => {
             text,
             user_id
         });
+
+
+        const allMessages = await listUserMessagesService.execute({ user_id });
+        socket.emit("client_list_all_messages", allMessages);
 
     });
 });
