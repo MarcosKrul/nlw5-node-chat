@@ -73,3 +73,17 @@ function sendMessage(id) {
     text.value = "";
     divMessages.appendChild(createDiv);
 }
+
+socket.on("admin_receive_message", data => {
+        
+    const connection = list_connections.find(connection => connection.socket_id === data.socket_id);
+
+    const createDiv = document.createElement("div");
+    const divMessages = document.getElementById(`allMessages${connection.user_id}`);
+            
+    createDiv.className = "admin_message_client";
+    createDiv.innerHTML = `<span>${connection.user.email} - ${data.message.text}</span>`
+    createDiv.innerHTML += `<span className="admin_date">${dayjs(data.message.created_at).format("DD/MM/YYY HH:mm:ss")}</span>`
+    divMessages.appendChild(createDiv);
+    
+});
