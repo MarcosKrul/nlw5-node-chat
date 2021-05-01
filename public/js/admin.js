@@ -32,6 +32,23 @@ function call(id) {
 
     const params = { user_id: connection.user_id };
     socket.emit("admin_list_messages_by_user", params, (messages) => {
-        console.log(messages);
+        
+        const divMessages = document.getElementById(`allMessages${connection.user_id}`);
+
+        messages.forEach(message => {
+            const createDiv = document.createElement("div");
+            
+            if (message.admin_id === null) {
+                createDiv.className = "admin_message_client";
+                createDiv.innerHTML = `<span>${connection.user.email} - ${message.text}</span>`
+                createDiv.innerHTML += `<span className="admin_date">${dayjs(message.created_at).format("DD/MM/YYY HH:mm:ss")}</span>`
+            } else {
+                createDiv.className = "admin_message_admin";
+                createDiv.innerHTML = `Atendente: <span>${message.text}</span>`
+                createDiv.innerHTML += `<span className="admin_date">${dayjs(message.created_at).format("DD/MM/YYY HH:mm:ss")}</span>`
+            }
+
+            divMessages.appendChild(createDiv);
+        }); 
     });
 }
