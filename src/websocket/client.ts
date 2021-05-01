@@ -6,7 +6,8 @@ import {
 import { 
     CreateConnectionsService, 
     GetUserIdBySocketService,
-    GetConnectionByUserIdService 
+    GetConnectionByUserIdService,
+    FindAllMessagesWithoutAdminService
 } from "../services/connectionsServices";
 import {
     CreateMessagesService,
@@ -33,6 +34,7 @@ io.on("connect", (socket) => {
     const createConnectionService = new CreateConnectionsService();
     const getUserIdBySocketService = new GetUserIdBySocketService();
     const getConnectionByUserIdService = new GetConnectionByUserIdService();
+    const findAllMessagesWithoutAdminService = new FindAllMessagesWithoutAdminService();
 
     socket.on("client_first_access", async params => {
 
@@ -75,6 +77,9 @@ io.on("connect", (socket) => {
 
         const allMessages = await listUserMessagesService.execute({ user_id });
         socket.emit("client_list_all_messages", allMessages);
+
+        const allUsers = await findAllMessagesWithoutAdminService.execute();
+        io.emit("admin_list_all_users", allUsers);
 
     });
 
